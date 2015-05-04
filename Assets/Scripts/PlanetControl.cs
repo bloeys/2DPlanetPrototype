@@ -12,7 +12,7 @@ public class PlanetControl : MonoBehaviour
     bool attractingObjects;
     int objectsInRange;
     float radius;
-    List<AffectedByGravity> objectsAffectedByGravity = new List<AffectedByGravity>();
+    public List<AffectedByGravity> objectsAffectedByGravity = new List<AffectedByGravity>();
 
     void Start()
     {
@@ -35,6 +35,15 @@ public class PlanetControl : MonoBehaviour
             AddToBeingAttracted(affectedByGravity);
     }
 
+    void OnTriggerExit2D(Collider2D c)
+    {
+        //If object can be affected by gravity then add it to list
+        AffectedByGravity affectedByGravity = c.GetComponent<AffectedByGravity>();
+
+        if (affectedByGravity)
+        objectsAffectedByGravity.Remove(affectedByGravity);
+    }
+
     /// <summary>
     /// Adds object to list of objects to attract
     /// </summary>
@@ -48,7 +57,7 @@ public class PlanetControl : MonoBehaviour
         if (attractedObject is OrientToPlanet)
         {
             OrientToPlanet orient = (OrientToPlanet)attractedObject;
-            orient.planet = rb;
+            orient.planets.Add(rb);
         }
 
         //If coroutine isn't already runnning then run it
